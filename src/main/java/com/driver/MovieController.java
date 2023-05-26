@@ -1,12 +1,11 @@
 package com.driver;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("movies")
@@ -67,13 +66,13 @@ public class MovieController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
     @DeleteMapping("/delete-director-by-name")
-    public ResponseEntity<String> deleteDirectorByName(@PathVariable String name){
+    public ResponseEntity<String> deleteDirectorByName(@RequestParam String name){
         movieService.deleteDirector(name);
         return new ResponseEntity<>("Director Deleted Successfully", HttpStatus.OK);
     }
     @DeleteMapping("/delete-all-directors")
     public ResponseEntity<String> deleteAllDirectors(){
         movieService.deleteAllDirector();
-        return new ResponseEntity<>("Deleted All Directors", HttpStatus.OK);
+        return new ResponseEntity<>("All Directors deleted successfully", HttpStatus.OK);
     }
 }

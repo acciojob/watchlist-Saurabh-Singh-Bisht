@@ -1,6 +1,5 @@
 package com.driver;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +14,7 @@ public class MovieRepository {
     }
 
     public void add(Director director) {
+
         directorData.put(director.getName(), director);
     }
 
@@ -45,12 +45,13 @@ public class MovieRepository {
     public List<String> getAllMovies() {
         return new ArrayList<>(movieData.keySet());
     }
-    public List<String> getAllDirector(){
-        return new ArrayList<>(directorData.keySet());
-    }
 
     public void deleteDirector(String name) {
         directorData.remove(name);
         directorMoviePair.remove(name);
+    }
+
+    public List<String> getAllDirector() {
+        return new ArrayList<>(directorData.keySet());
     }
 }
