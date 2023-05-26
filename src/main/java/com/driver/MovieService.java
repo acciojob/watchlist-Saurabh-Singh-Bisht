@@ -24,6 +24,7 @@ public class MovieService {
         }
         Director director1 = directorOpt.get();
         director1.setNumberOfMovies(director1.getNumberOfMovies()+1);
+        movieRepository.add(director1);
 
         movieRepository.add(movie,director);
     }
