@@ -5,6 +5,7 @@ import java.util.Optional;
 
 public class MovieService {
     private MovieRepository movieRepository = new MovieRepository();
+
     public void addMovie(Movie movie) {
         movieRepository.add(movie);
     }
@@ -13,54 +14,58 @@ public class MovieService {
         movieRepository.add(director);
     }
 
-    public void addMovieDirectorPair(String movie, String director) throws MovieNotFoundException,DirectorNotFoundException{
+    public void addMovieDirectorPair(String movie, String director) throws MovieNotFoundException, DirectorNotFoundException{
         Optional<Movie> movieOpt = movieRepository.getMovie(movie);
         Optional<Director> directorOpt = movieRepository.getDirector(director);
         if(movieOpt.isEmpty()){
-            throw new MovieNotFoundException("Movie Not Present");
+            throw new MovieNotFoundException("Movie Not Present in Database");
         }
         if(directorOpt.isEmpty()){
-            throw  new DirectorNotFoundException("Director Not Present");
+            throw new DirectorNotFoundException("Director Not Present in Database");
         }
         Director director1 = directorOpt.get();
         director1.setNumberOfMovies(director1.getNumberOfMovies()+1);
         movieRepository.add(director1);
 
-        movieRepository.add(movie,director);
+        movieRepository.add(movie, director);
     }
 
-    public Movie getMovieByName(String name) throws MovieNotFoundException{
-        Optional<Movie> movieOpt = movieRepository.getMovie(name);
-        if(movieOpt.isPresent()){
-            return movieOpt.get();
+    public Movie getMovieByName(String movie) throws MovieNotFoundException{
+        Optional<Movie> curr = movieRepository.getMovie(movie);
+        if(curr.isPresent()){
+            return curr.get();
         }
-        throw new MovieNotFoundException("Invalid Movie Name");
+        throw new MovieNotFoundException("Movie Not Present in Database");
     }
 
-    public Director getDirectorByName(String name) {
-        Optional<Director> directorOpt = movieRepository.getDirector(name);
+    public Director getDirectorByName(String director) {
+        Optional<Director> directorOpt = movieRepository.getDirector(director);
         if(directorOpt.isPresent()){
             return directorOpt.get();
         }
-        throw new DirectorNotFoundException("Invalid Director Name");
+        throw new DirectorNotFoundException("Director Not Present in Database");
     }
 
-    public List<String> getMoviesByDirectorName(String name) {
-        return movieRepository.getMovieByDirector(name);
+    public List<String> getMovieByDirectorName(String director) {
+        return movieRepository.getDirectorMovies(director);
     }
 
     public List<String> getAllMovies() {
         return movieRepository.getAllMovies();
     }
 
-    public void deleteDirector(String name) {
-        movieRepository.deleteDirector(name);
+    public void deleteDirectorByName(String director) {
+        List<String> moviesName = movieRepository.getDirectorMovies(director);
+        for(String curr: moviesName){
+            movieRepository.deleteMovies(curr);
+        }
+        movieRepository.deleteDirector(director);
     }
 
-    public void deleteAllDirector() {
-        List<String> director = movieRepository.getAllDirector();
-        for(String list: director){
-            movieRepository.deleteDirector(list);
+    public void deleteAllDirectors() {
+        List<String> directorName = movieRepository.getAllDirector();
+        for (String curr: directorName){
+            deleteDirectorByName(curr);
         }
     }
 }

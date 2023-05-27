@@ -9,46 +9,50 @@ public class MovieRepository {
     private HashMap<String, Movie> movieData = new HashMap<>();
     private HashMap<String, Director> directorData = new HashMap<>();
     private HashMap<String, ArrayList<String>> directorMoviePair = new HashMap<>();
+
     public void add(Movie movie) {
         movieData.put(movie.getName(), movie);
     }
 
     public void add(Director director) {
-
         directorData.put(director.getName(), director);
     }
 
+    public Optional<Movie> getMovie(String movie) {
+        if(movieData.containsKey(movie)){
+            return Optional.of(movieData.get(movie));
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Director> getDirector(String director) {
+        if(directorData.containsKey(director)){
+            return Optional.of(directorData.get(director));
+        }
+        return Optional.empty();
+    }
+
     public void add(String movie, String director) {
-        ArrayList<String> movies = directorMoviePair.getOrDefault(director, new ArrayList<>());
-        movies.add(movie);
-        directorMoviePair.put(director, movies);
+        ArrayList<String> movieList = directorMoviePair.getOrDefault(director, new ArrayList<>());
+        movieList.add(movie);
+        directorMoviePair.put(director, movieList);
     }
 
-    public Optional<Movie> getMovie(String name) {
-        if(movieData.containsKey(name)){
-            return Optional.of(movieData.get(name));
-        }
-        return Optional.empty();
-    }
-
-    public Optional<Director> getDirector(String name) {
-        if(directorData.containsKey(name)){
-            return Optional.of(directorData.get(name));
-        }
-        return Optional.empty();
-    }
-
-    public List<String> getMovieByDirector(String name) {
-        return directorMoviePair.getOrDefault(name, new ArrayList<>());
+    public List<String> getDirectorMovies(String director) {
+        return directorMoviePair.getOrDefault(director, new ArrayList<>());
     }
 
     public List<String> getAllMovies() {
         return new ArrayList<>(movieData.keySet());
     }
 
-    public void deleteDirector(String name) {
-        directorData.remove(name);
-        directorMoviePair.remove(name);
+    public void deleteMovies(String curr) {
+        movieData.remove(curr);
+    }
+
+    public void deleteDirector(String director) {
+        directorData.remove(director);
+        directorMoviePair.remove(director);
     }
 
     public List<String> getAllDirector() {
